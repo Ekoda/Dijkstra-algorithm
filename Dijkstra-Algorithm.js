@@ -43,15 +43,15 @@ graph = [
 
 //Finds Children of a given node
 function Children(graph, x, y) {
-	ChildList = [];
-	left = graph[x][y - 1];
-	topLeft = undefined;
-	top = undefined;
-	topRight = undefined;
-	right = graph[x][y + 1];
-	bottomRight = undefined;
-	bottom = undefined;
-	bottomLeft = undefined;
+	let ChildList = [];
+	let left = graph[x][y - 1];
+	let topLeft = undefined;
+	let top = undefined;
+	let topRight = undefined;
+	let right = graph[x][y + 1];
+	let bottomRight = undefined;
+	let bottom = undefined;
+	let bottomLeft = undefined;
 	if (x > 0) {
 		topLeft = graph[x - 1][y - 1];
 		top = graph[x - 1][y];
@@ -62,7 +62,7 @@ function Children(graph, x, y) {
 		bottom = graph[x + 1][y];
 		bottomLeft = graph[x + 1][y - 1];
 	}
-	adjList = [
+	let adjList = [
 		left,
 		topLeft,
 		top,
@@ -73,7 +73,7 @@ function Children(graph, x, y) {
 		bottomLeft,
 	];
 
-	childPosLi = [
+	let childPosLi = [
 		[x, y - 1],
 		[x - 1, y - 1],
 		[x - 1, y],
@@ -83,13 +83,13 @@ function Children(graph, x, y) {
 		[x + 1, y],
 		[x + 1, y - 1],
 	];
-	for (counter = 0; counter <= 8; counter++) {
-		if (adjList[counter] == undefined) {
+	for (let i = 0; i <= 8; i++) {
+		if (adjList[i] == undefined) {
 			continue;
 		} else {
-			CpX = childPosLi[counter][0];
-			CpY = childPosLi[counter][1];
-			ChildList.push([CpX, CpY]);
+			let x = childPosLi[i][0];
+			let y = childPosLi[i][1];
+			ChildList.push([x, y]);
 		}
 	}
 	return ChildList;
@@ -97,16 +97,15 @@ function Children(graph, x, y) {
 
 //Finds the index of the node with the lowest score
 function findLowestIndex(graphScore, graphVisited) {
-	LowScore = Infinity;
-	lowestIndex = [];
-	for (lowR = 0; lowR < graphScore.length; lowR++) {
-		for (lowC = 0; lowC < graphScore[0].length; lowC++) {
+	let LowScore = Infinity;
+	for (let row = 0; row < graphScore.length; row++) {
+		for (let col = 0; col < graphScore[0].length; col++) {
 			if (
-				graphScore[lowR][lowC] < LowScore &&
-				graphVisited[lowR][lowC] == false
+				graphScore[row][col] < LowScore &&
+				graphVisited[row][col] == false
 			) {
-				LowScore = graphScore[lowR][lowC];
-				LowestIndex = [lowR, lowC];
+				LowScore = graphScore[row][col];
+				LowestIndex = [row, col];
 				continue;
 			} else {
 				continue;
@@ -124,37 +123,34 @@ function processStartNode(graph, graphScore, graphPath, graphVisited, x, y) {
 	graphScore[x][y] = 0;
 	graphPath[x][y] = null;
 	graphVisited[x][y] = true;
-	childNodes = Children(graph, x, y);
+	let childNodes = Children(graph, x, y);
 	for (start = 0; start <= childNodes.length - 1; start++) {
-		cR = childNodes[start][0];
-		cC = childNodes[start][1];
-		graphScore[cR][cC] = graphScore[x][y] + 1;
-		graphPath[cR][cC] = [x, y];
+		let a = childNodes[start][0];
+		let b = childNodes[start][1];
+		graphScore[a][b] = graphScore[x][y] + 1;
+		graphPath[a][b] = [x, y];
 	}
 }
 
 //Finds the node with the lowest score and processes it, if processed node is End node return true
 function processNodes(graph, graphScore, graphPath, graphVisited) {
-	NodeProcessPosition = findLowestIndex(graphScore, graphVisited);
-	a = NodeProcessPosition[0];
-	b = NodeProcessPosition[1];
-	childNodes = Children(graph, a, b);
+	let NodeProcessPosition = findLowestIndex(graphScore, graphVisited);
+	let a = NodeProcessPosition[0];
+	let b = NodeProcessPosition[1];
+	let childNodes = Children(graph, a, b);
 	graphVisited[a][b] = true;
-	for (i = 0; i < childNodes.length; i++) {
-		childNodeRow = childNodes[i][0];
-		childNodeCol = childNodes[i][1];
-		if (a == childNodeRow || b == childNodeCol) {
-			if (graphScore[childNodeRow][childNodeCol] > graphScore[a][b] + 1) {
-				graphScore[childNodeRow][childNodeCol] = graphScore[a][b] + 1;
-				graphPath[childNodeRow][childNodeCol] = [a, b];
+	for (let i = 0; i < childNodes.length; i++) {
+		let childRow = childNodes[i][0];
+		let childCol = childNodes[i][1];
+		if (a == childRow || b == childCol) {
+			if (graphScore[childRow][childCol] > graphScore[a][b] + 1) {
+				graphScore[childRow][childCol] = graphScore[a][b] + 1;
+				graphPath[childRow][childCol] = [a, b];
 			}
-		} else if (a !== childNodeRow && b !== childNodeCol) {
-			if (
-				graphScore[childNodeRow][childNodeCol] >
-				graphScore[a][b] + 1.1
-			) {
-				graphScore[childNodeRow][childNodeCol] = graphScore[a][b] + 1.1;
-				graphPath[childNodeRow][childNodeCol] = [a, b];
+		} else if (a !== childRow && b !== childCol) {
+			if (graphScore[childRow][childCol] > graphScore[a][b] + 1.1) {
+				graphScore[childRow][childCol] = graphScore[a][b] + 1.1;
+				graphPath[childRow][childCol] = [a, b];
 			}
 		}
 	}
@@ -165,9 +161,9 @@ function processNodes(graph, graphScore, graphPath, graphVisited) {
 
 //maps the shortest path from start node to end node
 function mapPath(graphPath, x, y) {
-	finishedPath = false;
-	travelPath = graphPath[x][y];
-	Path = [[x, y]];
+	let finishedPath = false;
+	let travelPath = graphPath[x][y];
+	let Path = [[x, y]];
 	while (finishedPath == false) {
 		Path.push(travelPath);
 		travelPath = graphPath[travelPath[0]][travelPath[1]];
@@ -180,15 +176,21 @@ function mapPath(graphPath, x, y) {
 
 //ab = starting positon in list form, cd end position in list form
 function dijkstra(graph, ab, cd) {
-	graphScore = graph.map(x => x.slice()).map(x => x.map(x => (x = Infinity)));
-	graphPath = graph.map(x => x.slice()).map(x => x.map(x => (x = 'noPath')));
-	graphVisited = graph.map(x => x.slice()).map(x => x.map(x => (x = false)));
-	pathFound = false;
+	let graphScore = graph
+		.map(x => x.slice())
+		.map(x => x.map(x => (x = Infinity)));
+	let graphPath = graph
+		.map(x => x.slice())
+		.map(x => x.map(x => (x = 'noPath')));
+	let graphVisited = graph
+		.map(x => x.slice())
+		.map(x => x.map(x => (x = false)));
+	let pathFound = false;
 	graph[ab[0]][ab[1]] = 'S';
 	graph[cd[0]][cd[1]] = 'E';
 	processStartNode(graph, graphScore, graphPath, graphVisited, ab[0], ab[1]);
 	while (pathFound == false) {
-		proNode = processNodes(graph, graphScore, graphPath, graphVisited);
+		let proNode = processNodes(graph, graphScore, graphPath, graphVisited);
 		if (proNode == true) {
 			pathFound = true;
 			return mapPath(graphPath, cd[0], cd[1]);
@@ -196,4 +198,4 @@ function dijkstra(graph, ab, cd) {
 	}
 }
 
-console.log(dijkstra(graph, [0, 0], [15, 15]));
+console.log(dijkstra(graph, [0, 0], [20, 20]));
